@@ -1,12 +1,11 @@
 package hudson.plugins.checkstyle.parser;
 
-import org.apache.commons.lang.StringUtils;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.checkstyle.rules.CheckStyleRules;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.export.Exported;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -21,6 +20,9 @@ public class Warning extends AbstractAnnotation {
     private static final long serialVersionUID = 5171661552905752370L;
     /** Origin of the annotation. */
     public static final String ORIGIN = "checkstyle";
+
+
+    private String uniqueCode;
 
     /**
      * Creates a new instance of {@link Warning}.
@@ -40,6 +42,12 @@ public class Warning extends AbstractAnnotation {
      */
     public Warning(final Priority priority, final String message, final String category, final String type,
             final int start, final int end) {
+        super(priority, message, start, end, category, type);
+        setOrigin(ORIGIN);
+    }
+
+    public Warning(final Priority priority, final String message, final String category, final String type,
+                   final int start, final int end, String unique) {
         super(priority, message, start, end, category, type);
         setOrigin(ORIGIN);
     }
@@ -72,5 +80,15 @@ public class Warning extends AbstractAnnotation {
     @SuppressFBWarnings("")
     @Deprecated
     private final transient String tooltip = StringUtils.EMPTY; // backward compatibility NOPMD
+
+
+    public void setUniqueCode(String uniqueCode) {
+        this.uniqueCode = uniqueCode;
+    }
+
+    @Exported
+    public String getUniqueCode() {
+        return this.uniqueCode;
+    }
 }
 

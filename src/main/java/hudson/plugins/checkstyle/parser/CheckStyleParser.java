@@ -1,20 +1,21 @@
 package hudson.plugins.checkstyle.parser;
 
+import hudson.plugins.analysis.core.AbstractAnnotationParser;
+import hudson.plugins.analysis.util.PackageDetectors;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
+import hudson.plugins.checkstyle.util.MD5Util;
+import hudson.plugins.checkstyle.util.SuperContextHashCode;
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.lang.StringUtils;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.apache.commons.digester3.Digester;
-import org.apache.commons.lang.StringUtils;
-import org.xml.sax.SAXException;
-
-import hudson.plugins.analysis.core.AbstractAnnotationParser;
-import hudson.plugins.analysis.util.PackageDetectors;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.Priority;
 
 /**
  * A parser for Checkstyle XML files.
@@ -112,6 +113,9 @@ public class CheckStyleParser extends AbstractAnnotationParser {
                     String type = StringUtils.substringAfterLast(source, ".");
                     String category = StringUtils.substringAfterLast(StringUtils.substringBeforeLast(source, "."), ".");
 
+                    SuperContextHashCode contextHashCode = new SuperContextHashCode();
+                    String unique = createContextUniqueCode(contextHashCode, file.getName(), error.getLine(), error.getSource());
+
                     Warning warning = new Warning(priority, error.getMessage(), StringUtils.capitalize(category),
                             type, error.getLine(), error.getLine());
                     warning.setModuleName(moduleName);
@@ -119,11 +123,29 @@ public class CheckStyleParser extends AbstractAnnotationParser {
                     warning.setPackageName(packageName);
                     warning.setColumnPosition(error.getColumn());
                     warning.setContextHashCode(createContextHashCode(file.getName(), error.getLine(), type));
+                    warning.setUniqueCode(unique);
                     annotations.add(warning);
                 }
             }
         }
         return annotations;
+    }
+
+    private String createContextUniqueCode(SuperContextHashCode contextHashCode, final String fileName, final int line, final String warningType){
+        StringBuilder builder = null;
+        builder = contextHashCode.getContext();
+        if (builder == null) {
+            builder = new StringBuilder();
+            builder.append(fileName).append(line);
+        }
+        builder.append(warningType);
+        String src = builder.toString();
+        src = src.replaceAll(" ", "");
+        String uniqueCode = MD5Util.digest(src);
+        if ("".equals(uniqueCode)) {
+            uniqueCode = src.hashCode() + "";
+        }
+        return uniqueCode;
     }
 
     /**

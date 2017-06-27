@@ -8,11 +8,22 @@ package hudson.plugins.checkstyle.parser;
 // CHECKSTYLE:OFF
 @SuppressWarnings("javadoc")
 public class Error {
+
     private String source;
     private String severity;
     private String message;
     private int line;
     private int column;
+
+    public String getUnique() {
+        return unique;
+    }
+
+    public void setUnique(String unique) {
+        this.unique = unique;
+    }
+
+    private String unique;
 
     public int getColumn() {
         return column;
@@ -53,5 +64,7 @@ public class Error {
     public void setLine(final int line) {
         this.line = line;
     }
+
+
 }
 
