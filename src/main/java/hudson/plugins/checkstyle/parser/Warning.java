@@ -24,6 +24,8 @@ public class Warning extends AbstractAnnotation {
 
     private String uniqueCode;
 
+    private String ruleName;
+
     /**
      * Creates a new instance of {@link Warning}.
      *
@@ -47,7 +49,7 @@ public class Warning extends AbstractAnnotation {
     }
 
     public Warning(final Priority priority, final String message, final String category, final String type,
-                   final int start, final int end, String unique) {
+                   final int start, final int end, String unique, String ruleName) {
         super(priority, message, start, end, category, type);
         setOrigin(ORIGIN);
     }
@@ -90,5 +92,15 @@ public class Warning extends AbstractAnnotation {
     public String getUniqueCode() {
         return this.uniqueCode;
     }
+
+    public void setRuleName(String ruleName){
+        this.ruleName = ruleName;
+    }
+
+    @Exported
+    public String getRuleName() {
+        return this.ruleName;
+    }
+
 }
 

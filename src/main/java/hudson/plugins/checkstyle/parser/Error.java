@@ -14,6 +14,8 @@ public class Error {
     private String message;
     private int line;
     private int column;
+    private String unique;
+    private String ruleName;
 
     public String getUnique() {
         return unique;
@@ -23,7 +25,7 @@ public class Error {
         this.unique = unique;
     }
 
-    private String unique;
+
 
     public int getColumn() {
         return column;
@@ -66,5 +68,12 @@ public class Error {
     }
 
 
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
 }
 
