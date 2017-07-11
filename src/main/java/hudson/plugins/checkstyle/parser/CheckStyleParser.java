@@ -115,14 +115,13 @@ public class CheckStyleParser extends AbstractAnnotationParser {
 
                     SuperContextHashCode contextHashCode = new SuperContextHashCode();
                     String unique = createContextUniqueCode(contextHashCode, file.getName(), error.getLine(), error.getSource());
-                    String ruleName = source;
 
                     Warning warning = new Warning(priority, error.getMessage(), StringUtils.capitalize(category),
                             type, error.getLine(), error.getLine());
                     warning.setModuleName(moduleName);
                     warning.setFileName(file.getName());
                     warning.setPackageName(packageName);
-                    warning.setRuleName(ruleName);
+                    warning.setRuleName(source);
                     warning.setColumnPosition(error.getColumn());
                     warning.setContextHashCode(createContextHashCode(file.getName(), error.getLine(), type));
                     warning.setUniqueCode(unique);
